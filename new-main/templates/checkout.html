@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% block title %}Checkout - TruckBrand{% endblock title %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary mb-3">Checkout</h1>
+        <p class="lead text-muted">Complete your purchase</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block body %}
+<section class="checkout-section py-5">
+  <div class="container">
+    <div class="row g-4">
+      <!-- Order Summary -->
+      <div class="col-lg-4 order-lg-2">
+        <div class="order-summary bg-light p-4 rounded-3 shadow-sm sticky-lg-top" style="top: 100px;">
+          <h4 class="mb-4">Order Summary</h4>
+          <div id="items" class="order-items mb-4">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Subtotal</span>
+            <span id="subtotal">₹0.00</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Shipping</span>
+            <span class="text-success">Free</span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between mb-4">
+            <strong>Total</strong>
+            <strong id="total" class="text-primary">₹0.00</strong>
+          </div>
+          <button id="submit" class="btn btn-primary w-100">
+            Place Order <i class="bi bi-arrow-right ms-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Checkout Form -->
+      <div class="col-lg-8 order-lg-1">
+        <div class="checkout-form bg-white p-4 rounded-3 shadow-sm">
+          <form method="post" action="/checkout/">{% csrf_token %}
+            <input type="hidden" name="itemsJson" id="itemsJson">
+            <input type="hidden" name="amt" id="amt">
+
+            <!-- Personal Information -->
+            <div class="section mb-5">
+              <h5 class="mb-4">Personal Information</h5>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" required>
+                    <label for="name">Full Name</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                    <label for="email">Email Address</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone" required>
+                    <label for="phone">Phone Number</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="section mb-5">
+              <h5 class="mb-4">Shipping Address</h5>
+              <div class="row g-3">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="address1" name="address1" placeholder="Address Line 1" required>
+                    <label for="address1">Address Line 1</label>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="address2" name="address2" placeholder="Address Line 2">
+                    <label for="address2">Address Line 2 (Optional)</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="city" name="city" placeholder="City" required>
+                    <label for="city">City</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="state" name="state" placeholder="State" required>
+                    <label for="state">State</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="zip_code" name="zip_code" placeholder="ZIP Code" required>
+                    <label for="zip_code">ZIP Code</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .checkout-section {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding-top: 2rem;
+  }
+
+  .form-floating > .form-control {
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+  }
+
+  .form-floating > label {
+    padding: 1rem 0.75rem;
+  }
+
+  .order-summary {
+    position: sticky;
+    top: 100px;
+    z-index: 10;
+  }
+
+  .order-items {
+    max-height: calc(100vh - 400px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  .order-items::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .order-items::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .order-items::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .cart-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .cart-item-details {
+    flex: 1;
+  }
+
+  .cart-item-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+  }
+
+  .cart-item-price {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+
+  @media (max-width: 991.98px) {
+    .order-summary {
+      position: static;
+      margin-bottom: 2rem;
+    }
+    
+    .order-items {
+      max-height: none;
+    }
+    
+    .checkout-section {
+      padding-top: 1rem;
+    }
+  }
+</style>
+
+<script>
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+}
+
+// Update cart display
+function updateCart() {
+    let itemsContainer = document.getElementById('items');
+    let subtotal = 0;
+    itemsContainer.innerHTML = '';
+
+    for (let id in cart) {
+        let item = cart[id];
+        let quantity = item[0];
+        let name = item[1];
+        let price = parseFloat(item[2]);
+        let totalPrice = quantity * price;
+        subtotal += totalPrice;
+
+        itemsContainer.innerHTML += `
+            <div class="cart-item">
+                <div class="cart-item-details">
+                    <div class="cart-item-title">${name}</div>
+                    <div class="cart-item-price">₹${price} × ${quantity}</div>
+                </div>
+                <div class="text-end">
+                    <strong>₹${totalPrice.toFixed(2)}</strong>
+                </div>
+            </div>
+        `;
+    }
+
+    document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('total').textContent = `₹${subtotal.toFixed(2)}`;
+    document.getElementById('amt').value = subtotal.toFixed(2);
+    document.getElementById('itemsJson').value = JSON.stringify(cart);
+}
+
+// Initialize cart display
+updateCart();
+
+// Handle form submission
+document.getElementById('submit').addEventListener('click', function() {
+    document.querySelector('form').submit();
+});
+</script>
+{% endblock body %}

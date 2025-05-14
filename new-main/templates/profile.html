@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block title %}My Profile - TruckBrand{% endblock title %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="text-center mb-5">
+        <h1 class="fw-bold text-dark mb-3">My Profile</h1>
+        <p class="lead text-muted">View and track your orders</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block body %}
+<section class="profile-section py-5">
+  <div class="container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <strong>{{ message }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
+    <div class="row">
+      <div class="col-lg-4 mb-4">
+        <div class="profile-sidebar bg-light p-4 rounded-3 shadow-sm">
+          <div class="text-center mb-4">
+            <div class="profile-avatar mb-3">
+              <i class="bi bi-person-circle display-1 text-primary"></i>
+            </div>
+            <h4 class="mb-1">{{ request.user.username }}</h4>
+            <p class="text-muted small mb-0">{{ request.user.email }}</p>
+          </div>
+          <hr>
+          <div class="profile-stats">
+            <div class="row text-center g-0">
+              <div class="col">
+                <h5 class="mb-1">{{ items|length }}</h5>
+                <p class="text-muted small mb-0">Total Orders</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="orders-section">
+          {% if items %}
+            {% for item in items %}
+            <div class="order-card bg-light p-4 rounded-3 shadow-sm mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Order #{{ item.order_id }}</h5>
+                <span class="badge {% if item.paymentstatus == 'PAID' %}bg-success{% else %}bg-warning{% endif %}">
+                  {{ item.paymentstatus }}
+                </span>
+              </div>
+              
+              <div class="order-details">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="detail-item">
+                      <span class="text-muted">Amount:</span>
+                      <strong>₹{{ item.amount }}</strong>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="detail-item">
+                      <span class="text-muted">Order Date:</span>
+                      <strong>{{ item.timestamp|date:"d M, Y" }}</strong>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="detail-item">
+                      <span class="text-muted">Shipping Address:</span>
+                      <strong>{{ item.address1 }}, {{ item.address2 }}, {{ item.city }}, {{ item.state }} - {{ item.zip_code }}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="order-timeline mt-4">
+                  <h6 class="mb-3">Order Status</h6>
+                  <div class="timeline">
+                    {% for update in status %}
+                      {% if update.order_id == item.order_id %}
+                      <div class="timeline-item">
+                        <div class="timeline-marker bg-primary"></div>
+                        <div class="timeline-content">
+                          <p class="mb-0">{{ update.update_desc }}</p>
+                          <small class="text-muted">{{ update.timestamp|date:"d M, Y H:i" }}</small>
+                        </div>
+                      </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="text-center py-5">
+              <i class="bi bi-bag-x display-1 text-muted mb-3"></i>
+              <h4>No Orders Yet</h4>
+              <p class="text-muted">Start shopping to see your orders here!</p>
+              <a href="/" class="btn btn-primary">Shop Now</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .profile-section {
+    background-color: #f8f9fa;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .order-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .order-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.08);
+  }
+
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: 0.5rem;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 30px;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+  }
+
+  .timeline-item:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: -30px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-top: 5px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 12px;
+    bottom: -5px;
+    width: 2px;
+    background: #dee2e6;
+  }
+
+  .timeline-item:last-child::before {
+    display: none;
+  }
+
+  .timeline-content {
+    background: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  @media (max-width: 991.98px) {
+    .profile-sidebar {
+      margin-bottom: 2rem;
+    }
+  }
+</style>
+{% endblock body %}

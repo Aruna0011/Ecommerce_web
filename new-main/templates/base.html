@@ -1,0 +1,325 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <title>{% block title %} {% endblock title %}</title>
+    <meta
+      content="Ecommerce website, we deliver quailty product"
+      name="description"
+    />
+    <meta content="ecommerce" name="indiamart,mustard,oil,truckbrand" />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+
+    <!-- Vendor CSS Files -->
+    <link
+      href="{% static '/assets/vendor/bootstrap/css/bootstrap.min.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static '/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static '/assets/vendor/boxicons/css/boxicons.min.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static '/assets/vendor/glightbox/css/glightbox.min.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static '/assets/vendor/remixicon/remixicon.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static '/assets/vendor/swiper/swiper-bundle.min.css' %}"
+      rel="stylesheet"
+    />
+
+    <!-- Template Main CSS File -->
+    <link href="{% static '/assets/css/style.css' %}" rel="stylesheet" />
+  </head>
+
+  <body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top">
+      <div class="container d-flex align-items-center justify-content-between">
+  
+         <a href="/" class="logo" id=logo1><span class="fw-bold">TruckBrand</span></a>
+
+        <nav id="navbar" class="navbar">
+          <ul>
+            <li><a class="nav-link scrollto active" href="/">Home</a></li>
+            <li><a class="nav-link scrollto" href="/about">About</a></li>
+            <li><a class="nav-link scrollto" href="/checkout">Checkout</a></li>
+            <li><a class="nav-link scrollto" href="/profile">My Profile</a></li>
+
+            <li>
+              <button type="button" class="btn btn-danger rounded-pill px-3 mx-2" id="popcart" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true">
+                <i class="fa-solid fa-cart-shopping me-1"></i> Cart (<span id="cart">0</span>)
+              </button>
+            </li>
+           
+
+
+            {% if request.user.is_authenticated %}
+            <li><a class="nav-link scrollto" href="/cart/logout/">Logout&nbsp;<i class="fa-solid fa-right-from-bracket"></i></a></li>
+    
+
+            {% else %}
+            <li class="dropdown">
+              <a href="#"
+                ><span>SignIn</span> <i class="bi bi-chevron-down"></i
+              ></a>
+
+              <ul>
+                <li><a href="/cart/signup/">Sign Up<i class="fa-regular fa-user"></i></a></li>
+                <li><a href="/cart/login/">Login<i class="fa-solid fa-right-to-bracket"></i></i></a></li>
+               
+              </ul>
+            </li>
+  
+            {% endif %}
+          
+            <li>
+              <a class="nav-link scrollto bg-dark p-3 m-2" href="/contact"
+                >Contact&nbsp;<i class="fa-solid fa-phone"></i> </a>
+            </li>
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+        <!-- .navbar -->
+      </div>
+    </header>
+    <!-- End Header -->
+
+    <!-- ======= Hero Section ======= -->
+    <section id="hero">
+      <div class="hero-container">
+        {% block content %}
+     
+
+
+        
+        {% endblock content %}
+      </div>
+    </section>
+    <!-- End Hero -->
+
+    <main id="main">
+      {% block body %} 
+    
+  
+      {% endblock body %}</main>
+    <!-- End #main -->
+
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="footer">
+      <div class="footer-top bg-dark text-white py-4">
+        <div class="container">
+          <div class="row g-4">
+            <div class="col-lg-5 col-md-6">
+              <div class="footer-info">
+                <div class="d-flex align-items-center mb-3">
+                  <img src="{% static '/images/logo.jpg' %}" alt="TruckBrand Logo" class="me-2 footer-logo">
+                  <h3 class="text-warning m-0 h4">TruckBrand</h3>
+                </div>
+                <div class="contact-info">
+                  <a href="https://maps.google.com/?q=123+Oil+Market+Street,+New+Delhi,+110001" target="_blank" class="contact-item">
+                    <i class="bi bi-geo-alt-fill text-warning"></i>
+                    <span>123 Oil Market Street, New Delhi, 110001</span>
+                  </a>
+                  <a href="tel:+919876543210" class="contact-item">
+                    <i class="bi bi-telephone-fill text-warning"></i>
+                    <span>+91 98765 43210</span>
+                  </a>
+                  <a href="mailto:info@truckbrand.com" class="contact-item">
+                    <i class="bi bi-envelope-fill text-warning"></i>
+                    <span>info@truckbrand.com</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 ms-lg-auto">
+              <div class="footer-links">
+                <h4 class="text-warning mb-3 h5">Quick Links</h4>
+                <div class="d-flex flex-column">
+                  <a href="/" class="footer-link">
+                    <i class="bi bi-chevron-right text-warning"></i>
+                    <span>Home</span>
+                  </a>
+                  <a href="/about" class="footer-link">
+                    <i class="bi bi-chevron-right text-warning"></i>
+                    <span>About Us</span>
+                  </a>
+                  <a href="/contact" class="footer-link">
+                    <i class="bi bi-chevron-right text-warning"></i>
+                    <span>Contact</span>
+                  </a>
+                  <a href="/checkout" class="footer-link">
+                    <i class="bi bi-chevron-right text-warning"></i>
+                    <span>Checkout</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid py-3 border-top bg-darker">
+        <div class="container">
+          <div class="row align-items-center g-2">
+            <div class="col-md-6 text-center text-md-start">
+              <div class="copyright text-white small">
+                &copy; <script>document.write(new Date().getFullYear())</script> <strong>TruckBrand</strong>. All Rights Reserved
+              </div>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+              <div class="credits text-white-50 small">
+                Designed with <i class="bi bi-heart-fill text-danger"></i> by TruckBrand Team
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
+
+    <a
+      href="#"
+      class="back-to-top d-flex align-items-center justify-content-center"
+      ><i class="bi bi-arrow-up-short"></i
+    ></a>
+
+    <!-- Vendor JS Files -->
+    <script src="{% static '/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static '/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+    <script src="{% static '/assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static '/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+    <script src="{% static '/assets/vendor/php-email-form/validate.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" integrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Template Main JS File -->
+    <script src="{% static '/assets/js/main.js' %}"></script>
+
+    <!-- Add this right before the closing </body> tag -->
+    <style>
+      .footer {
+        font-family: "Nunito", sans-serif;
+      }
+      .footer-top {
+        background: #1a1a1a !important;
+      }
+      .footer-logo {
+        height: 40px;
+        width: auto;
+      }
+      .contact-info {
+        font-size: 0.95rem;
+      }
+      .contact-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+      .contact-item:last-child {
+        margin-bottom: 0;
+      }
+      .contact-item i {
+        width: 16px;
+        margin-right: 0.5rem;
+        margin-top: 4px;
+      }
+      .contact-item span {
+        flex: 1;
+        line-height: 1.4;
+      }
+      .contact-item:hover {
+        color: #ffc107;
+      }
+      .contact-item:hover i {
+        transform: scale(1.1);
+      }
+      .footer-links .d-flex {
+        justify-content: flex-start;
+      }
+      .footer-link {
+        color: #fff;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-size: 0.95rem;
+        padding: 0.15rem 0;
+        transition: all 0.3s ease;
+      }
+      .footer-link i {
+        font-size: 0.8rem;
+        margin-right: 0.5rem;
+      }
+      .footer-link:hover {
+        color: #ffc107 !important;
+        padding-left: 0.5rem;
+      }
+      .bg-darker {
+        background: #141414 !important;
+      }
+
+      @media (max-width: 767.98px) {
+        .footer-info {
+          text-align: center;
+        }
+        .footer-info .d-flex {
+          justify-content: center;
+        }
+        .contact-item {
+          justify-content: center;
+          text-align: center;
+          padding: 0.5rem;
+        }
+        .contact-item i {
+          margin-top: 2px;
+        }
+        .contact-info {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .footer-links {
+          text-align: center;
+        }
+        .footer-links .d-flex {
+          align-items: center;
+        }
+        .footer-logo {
+          height: 35px;
+        }
+      }
+
+      @media (max-width: 575.98px) {
+        .contact-item {
+          font-size: 0.9rem;
+        }
+        .contact-item i {
+          font-size: 0.9rem;
+        }
+        .copyright, .credits {
+          font-size: 0.85rem;
+        }
+      }
+    </style>
+  </body>
+</html>

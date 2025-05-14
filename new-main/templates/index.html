@@ -1,0 +1,263 @@
+{% extends 'base.html' %} 
+{% block title %} HOME{% endblock title %} 
+{% block content %}
+
+<h1 class="text-center mt-4 mb-5">Buy Quality Products</h1>
+{% endblock content %} 
+{% block body %} 
+{% load static %}
+
+<!-- ======= Portfolio Section ======= -->
+<section id="portfolio" class="portfolio py-5">
+  <div class="container">
+    {% for message in messages %}
+    <div
+      class="alert alert-{{message.tags}} alert-dismissible fade show"
+      role="alert"
+    >
+      <strong>{{message}}</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="close"
+      ></button>
+    </div>
+    {% endfor %}
+
+    <div class="section-title text-center mb-5">
+      <h2 class="text-muted mb-3">Welcome to Our Shop</h2>
+      <h3>Check our <span class="text-primary">Products</span></h3>
+    </div>
+    {% for product, range, nSlides in allprods %}
+
+    <div class="product-category mb-5">
+      <h3 class="mb-4 text-center py-3 bg-light text-success rounded">
+        {{product.0.category}}
+      </h3>
+      <div class="container px-4">
+        <div class="row justify-content-start g-4">
+          {% for i in product %}
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100 shadow-sm hover-shadow transition">
+              <div class="product-img-wrapper">
+                <img src="/media/{{i.image}}" class="card-img-top product-img" alt="{{i.product_name}}" />
+              </div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title fw-bold" id="namepr{{i.id}}">{{i.product_name}}</h5>
+                <p class="card-text flex-grow-1">{{i.desc|slice:"0:53"}}...</p>
+                <div class="mt-auto">
+                  <h6 class="card-title mb-3">
+                    Price: <span class="text-primary fw-bold" id="pricepr{{i.id}}">{{i.price}}</span>
+                  </h6>
+                  <div id="divpr{{i.id}}" class="divpr d-flex gap-2">
+                    <button id="pr{{i.id}}" class="btn btn-primary cart">
+                      Add To Cart <i class="fa-solid fa-cart-shopping ms-1"></i>
+                    </button>
+                    <a href="/media/{{i.image}}" class="btn btn-outline-dark">
+                      View <i class="fa-solid fa-eye ms-1"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  .product-img-wrapper {
+    height: 250px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+  }
+  
+  .product-img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+  
+  .card {
+    border: none;
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card:hover .product-img {
+    transform: scale(1.05);
+  }
+  
+  .hover-shadow:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+  }
+  
+  .transition {
+    transition: all 0.3s ease;
+  }
+
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      max-width: 960px;
+    }
+  }
+</style>
+
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"
+  ></script>
+
+  <script>
+    //find pout the card from local storage
+
+    if (localStorage.getItem("cart") == null) {
+      var cart = {};
+    } else {
+      cart = JSON.parse(localStorage.getItem("cart"));
+      updateCart(cart);
+    }
+    // add or increment code
+
+    // $('.cart').click(function() {
+    $(".divpr").on("click", "button.cart", function () {
+      var idstr = this.id.toString();
+      console.log(idstr);
+
+      if (cart[idstr] != undefined) {
+        qty = cart[idstr][0] + 1;
+      } else {
+        qty = 1;
+        name = document.getElementById("name" + idstr).innerHTML;
+        price = document.getElementById("price" + idstr).innerHTML;
+        cart[idstr] = [qty, name, price];
+      }
+      updateCart(cart);
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      document.getElementById("cart").innerHTML = Object.keys(cart).length;
+      console.log(Object.keys(cart).length);
+      document.getElementById("popcart").click();
+    });
+    // add pop over to cart
+
+    $("#popcart").popover();
+
+    updatePopover(cart);
+    function updatePopover(cart) {
+      console.log("we are  inside update popover");
+
+      var popStr = "";
+      var popStr =
+        popStr +
+        "<h5> cart for your items in my shopping cart </h5> <div class='mx-2 my-2'>";
+      var i = 1;
+      for (var item in cart) {
+        popStr = popStr + "<b>" + i + "</b>. ";
+        popStr =
+          popStr +
+          document.getElementById("name" + item).innerHTML.slice(0, 19) +
+          "..." +
+          "<b>" +
+          cart[item][0] +
+          "</b>" +
+          "Qty" +
+          "<br>";
+        i = i + 1;
+      }
+
+      popStr =
+        popStr +
+        "</div> <a href='/checkout'><button class='btn btn-success' id='clearCart'>Checkout</button></a>  <button class='btn btn-dark' onclick='clearCart()' id='clearCart'>ClearCart</button>";
+      document.getElementById("popcart").setAttribute("data-content", popStr);
+      $("#popcart").popover("show");
+      document.getElementById("popcart").click();
+    }
+
+    function clearCart() {
+      cart = JSON.parse(localStorage.getItem("cart"));
+      for (var item in cart) {
+        document.getElementById("div" + item).innerHTML =
+          '<button id="' +
+          item +
+          '" class="btn btn-danger cart">AddtoCard <i class="fa-solid fa-cart-shopping"></i></button>';
+      }
+      localStorage.clear();
+      cart = {};
+      updateCart(cart);
+
+      let clear = document.getElementById("popcart").click();
+      document.getElementById("popcart").click();
+    }
+
+    function updateCart(cart) {
+      var sum = 0;
+      for (var item in cart) {
+        sum = sum + cart[item][0];
+        document.getElementById("div" + item).innerHTML =
+          "<button id='minus" +
+          item +
+          "'class='btn btn-success minus'>-</button> <span id='val" +
+          item +
+          "''>" +
+          cart[item][0] +
+          "</span> <button id='plus" +
+          item +
+          "' class='btn btn-success plus'> + </button>";
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      document.getElementById("cart").innerHTML = sum;
+      console.log(cart);
+      updatePopover(cart);
+      document.getElementById("popcart").click();
+    }
+
+    //if plus or minus button is clicked change the cart as well as the display value
+    $(".divpr").on("click", "button.minus", function () {
+      a = this.id.slice(7);
+      cart["pr" + a][0] = cart["pr" + a][0] - 1;
+      cart["pr" + a][0] = Math.max(0, cart["pr" + a][0]);
+      document.getElementById("valpr" + a).innerHTML = cart["pr" + a][0];
+      updateCart(cart);
+    })
+
+    $(".divpr").on("click", "button.plus", function () {
+      a = this.id.slice(6);
+      cart["pr" + a][0] = cart["pr" + a][0] + 1;
+
+      document.getElementById("valpr" + a).innerHTML = cart["pr" + a][0];
+      updateCart(cart);
+    })
+  </script>
+  {% endblock body %}
+

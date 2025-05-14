@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %} Login {% endblock title %}
+{% block content %}
+
+<div class='card bg-light p-4'> 
+  
+  {% for message in messages  %}  
+  <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+    <strong>{{message}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+  </div>
+  {% endfor %}
+
+
+  
+  <h2 class="text-dark m-1">Login </h2>
+  <form action="/cart/login/" method="post"> {% csrf_token %}
+    <br>
+    <label for="email">Email</label>
+    <div class="form-group">
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <label for="pass1">Password</label>
+    <div class="form-group">
+      <input type="password" class="form-control" id="pass1" name="pass1" required>
+    </div>
+
+   
+    <br>
+    <button type="submit" class="btn btn-dark m-1">login</button>
+    <br>
+    <span> Forget Password? <a href="/cart/request-reset-email/">Reset</a></span>
+    <br>
+    New User? <a href="/cart/signup/">SignUp</a>
+    <br>
+  </form>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}About Us - TruckBrand{% endblock title %}
+{% block content %}
+<div class="container mt-5 pt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary mb-3">About TruckBrand</h1>
+        <p class="lead text-muted">Delivering Quality Mustard Oil Since 1990</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block body %}
+<section class="about-section py-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="about-content pe-lg-4">
+          <h2 class="h3 mb-4">Our Story</h2>
+          <p>TruckBrand has been a trusted name in the mustard oil industry for over three decades. We take pride in delivering pure, high-quality mustard oil that meets the highest standards of quality and purity.</p>
+          
+          <h3 class="h4 mt-4 mb-3">Our Mission</h3>
+          <p>To provide the purest form of mustard oil to every household, maintaining traditional extraction methods while incorporating modern quality standards.</p>
+          
+          <div class="mt-4">
+            <h4 class="h5 mb-3">Why Choose Us?</h4>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                100% Pure Mustard Oil
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                Traditional Cold Pressed Method
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                Quality Assured Products
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                Nationwide Delivery
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-6">
+        <div class="about-features">
+          <h3 class="h4 mb-4">Our Commitment</h3>
+          <div class="row g-4">
+            <div class="col-sm-6">
+              <div class="feature-card p-4 bg-light rounded-3">
+                <i class="bi bi-award text-primary h2 mb-3"></i>
+                <h4 class="h5 mb-3">Quality</h4>
+                <p class="small mb-0">We maintain strict quality control at every step of production.</p>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="feature-card p-4 bg-light rounded-3">
+                <i class="bi bi-heart text-danger h2 mb-3"></i>
+                <h4 class="h5 mb-3">Purity</h4>
+                <p class="small mb-0">100% pure mustard oil with no additives or preservatives.</p>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="feature-card p-4 bg-light rounded-3">
+                <i class="bi bi-truck text-success h2 mb-3"></i>
+                <h4 class="h5 mb-3">Delivery</h4>
+                <p class="small mb-0">Fast and reliable delivery across the country.</p>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="feature-card p-4 bg-light rounded-3">
+                <i class="bi bi-people text-warning h2 mb-3"></i>
+                <h4 class="h5 mb-3">Customer First</h4>
+                <p class="small mb-0">Dedicated to customer satisfaction and support.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5 pt-4">
+      <div class="col-12 text-center">
+        <h3 class="h4 mb-4">Our Certifications</h3>
+        <div class="d-flex justify-content-center gap-4 flex-wrap">
+          <div class="certification-badge p-3 bg-light rounded-3">
+            <i class="bi bi-patch-check-fill text-primary h3 mb-2"></i>
+            <p class="small mb-0">ISO 9001:2015</p>
+          </div>
+          <div class="certification-badge p-3 bg-light rounded-3">
+            <i class="bi bi-patch-check-fill text-success h3 mb-2"></i>
+            <p class="small mb-0">FSSAI Certified</p>
+          </div>
+          <div class="certification-badge p-3 bg-light rounded-3">
+            <i class="bi bi-patch-check-fill text-warning h3 mb-2"></i>
+            <p class="small mb-0">AGMARK</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-section {
+    background-color: #fff;
+  }
+  
+  .feature-card {
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.08);
+  }
+  
+  .certification-badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+    transition: transform 0.3s ease;
+  }
+  
+  .certification-badge:hover {
+    transform: scale(1.05);
+  }
+  
+  @media (max-width: 991.98px) {
+    .about-content {
+      text-align: center;
+    }
+    
+    .about-content ul {
+      display: inline-block;
+      text-align: left;
+    }
+  }
+</style>
+{% endblock body %}
+    
