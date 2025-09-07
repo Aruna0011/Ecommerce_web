@@ -46,79 +46,464 @@
 
     <!-- Template Main CSS File -->
     <link href="{% static '/assets/css/style.css' %}" rel="stylesheet" />
+    
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
 
-  <body>
+  <body class="{% if request.path != '/' %}inner-page{% else %}home{% endif %}">
     <!-- ======= Header ======= -->
-    <header id="header" class="fixed-top">
-      <div class="container d-flex align-items-center justify-content-between">
-  
-         <a href="/" class="logo" id=logo1><span class="fw-bold">TruckBrand</span></a>
-
-        <nav id="navbar" class="navbar">
-          <ul>
-            <li><a class="nav-link scrollto active" href="/">Home</a></li>
-            <li><a class="nav-link scrollto" href="/about">About</a></li>
-            <li><a class="nav-link scrollto" href="/checkout">Checkout</a></li>
-            <li><a class="nav-link scrollto" href="/profile">My Profile</a></li>
-
-            <li>
-              <button type="button" class="btn btn-danger rounded-pill px-3 mx-2" id="popcart" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true">
-                <i class="fa-solid fa-cart-shopping me-1"></i> Cart (<span id="cart">0</span>)
-              </button>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+      <div class="container">
+        <!-- Brand/Logo -->
+        <a class="navbar-brand fw-bold text-white" href="/">
+          TruckBrand
+        </a>
+        
+        <!-- Mobile Toggle Button -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+          <i class="fas fa-bars text-white"></i>
+        </button>
+        
+        <!-- Desktop Menu -->
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+              <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
             </li>
-           
-
-
-            {% if request.user.is_authenticated %}
-            <li><a class="nav-link scrollto" href="/cart/logout/">Logout&nbsp;<i class="fa-solid fa-right-from-bracket"></i></a></li>
-    
-
-            {% else %}
-            <li class="dropdown">
-              <a href="#"
-                ><span>SignIn</span> <i class="bi bi-chevron-down"></i
-              ></a>
-
-              <ul>
-                <li><a href="/cart/signup/">Sign Up<i class="fa-regular fa-user"></i></a></li>
-                <li><a href="/cart/login/">Login<i class="fa-solid fa-right-to-bracket"></i></i></a></li>
-               
-              </ul>
+            <li class="nav-item">
+              <a class="nav-link" href="/about">About</a>
             </li>
-  
-            {% endif %}
-          
-            <li>
-              <a class="nav-link scrollto bg-dark p-3 m-2" href="/contact"
-                >Contact&nbsp;<i class="fa-solid fa-phone"></i> </a>
+            <li class="nav-item">
+              <a class="nav-link" href="/checkout">Checkout</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact">Contact</a>
             </li>
           </ul>
-          <i class="bi bi-list mobile-nav-toggle"></i>
-        </nav>
-        <!-- .navbar -->
+          
+          <!-- Right Side Icons -->
+          <div class="d-flex align-items-center">
+            <!-- Cart -->
+            <a href="/checkout" class="nav-icon me-3 position-relative">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="cart-badge">0</span>
+            </a>
+            
+            <!-- User Account -->
+            {% if request.user.is_authenticated %}
+              <a href="/profile" class="nav-icon me-2">
+                <i class="far fa-user"></i>
+              </a>
+              <a href="/cart/logout/" class="nav-icon" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+              </a>
+            {% else %}
+              <a href="/cart/login/" class="nav-icon me-2">
+                <i class="far fa-user"></i>
+              </a>
+            {% endif %}
+          </div>
+        </div>
       </div>
-    </header>
+    </nav>
+    
+    <!-- Mobile Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+      <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <!-- Mobile Menu Links -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
+              <i class="fas fa-home me-2"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">
+              <i class="fas fa-info-circle me-2"></i> About
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/checkout">
+              <i class="fas fa-shopping-cart me-2"></i> Checkout
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">
+              <i class="fas fa-phone-alt me-2"></i> Contact
+            </a>
+          </li>
+          
+          <!-- Mobile Account Links -->
+          {% if request.user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="/profile">
+                <i class="far fa-user me-2"></i> My Account
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/cart/logout/">
+                <i class="fas fa-sign-out-alt me-2"></i> Logout
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="/cart/login/">
+                <i class="fas fa-sign-in-alt me-2"></i> Login
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/cart/signup/">
+                <i class="fas fa-user-plus me-2"></i> Sign Up
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    
+    <style>
+      /* Navbar base styles */
+      .navbar {
+        padding: 1rem 0;
+        background-color: #000 !important;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      /* Brand/Logo */
+      .navbar-brand {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #ffffff !important;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+      }
+      
+      .navbar-brand:hover {
+        transform: translateY(-1px);
+      }
+      
+      /* Nav Links */
+      .navbar-nav .nav-link {
+        color: #ffffff !important;
+        font-weight: 500;
+        padding: 0.5rem 1rem !important;
+        margin: 0 0.25rem;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        opacity: 0.9;
+      }
+      
+      .navbar-nav .nav-link:hover,
+      .navbar-nav .nav-link.active {
+        color: #ffffff !important;
+        background-color: rgba(255, 255, 255, 0.15);
+        opacity: 1;
+      }
+      
+      /* Icons */
+      .nav-icon {
+        color: #ffffff;
+        font-size: 1.2rem;
+        padding: 0.5rem;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+        opacity: 0.9;
+      }
+      
+      .nav-icon:hover {
+        color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+        opacity: 1;
+      }
+      
+      /* Cart Badge */
+      .cart-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #e74c3c;
+        color: white;
+        border-radius: 50%;
+        padding: 0.25em 0.6em;
+        font-size: 0.7rem;
+        font-weight: 600;
+      }
+      
+      /* Mobile Menu */
+      .offcanvas {
+        max-width: 300px;
+        width: 80%;
+        background-color: #1a1a1a;
+        color: #ffffff;
+      }
+      
+      .offcanvas-header {
+        padding: 1.25rem 1.5rem;
+      }
+      
+      .offcanvas-title {
+        font-weight: 600;
+        color: #ffffff;
+      }
+      
+      .offcanvas-body {
+        padding: 1.5rem;
+      }
+      
+      /* Mobile Menu Links */
+      .offcanvas-body .nav-link {
+        padding: 0.75rem 1rem !important;
+        margin: 0.25rem 0;
+        border-radius: 6px;
+        color: #ffffff !important;
+        opacity: 0.9;
+      }
+      
+      .offcanvas-body .nav-link i {
+        width: 24px;
+        text-align: center;
+      }
+      
+      .offcanvas-body .nav-link:hover,
+      .offcanvas-body .nav-link.active {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff !important;
+        opacity: 1;
+      }
+      
+      /* Scrollbar Styles */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      
+      /* Responsive Adjustments */
+      @media (max-width: 991.98px) {
+        .navbar {
+          padding: 0.75rem 0;
+        }
+        
+        .search-box {
+          display: none;
+        }
+        
+        .navbar-toggler {
+          padding: 0.5rem;
+          border: none;
+          box-shadow: none !important;
+        }
+        
+        .navbar-toggler i {
+          font-size: 1.5rem;
+          color: #ffffff;
+        }
+      }
+      
+      @media (min-width: 992px) {
+        .offcanvas-backdrop {
+          display: none !important;
+        }
+      }
+      
+      .navbar-brand:hover {
+        transform: translateY(-1px);
+      }
+      
+      /* Mobile menu button */
+      .navbar-toggler {
+        border: none;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+      }
+      
+      .navbar-toggler:focus {
+        box-shadow: none;
+        outline: none;
+      }
+      
+      .navbar-toggler i {
+        font-size: 1.8rem;
+        color: #fff;
+        transition: all 0.3s ease;
+      }
+      
+      .navbar-toggler:hover i {
+        transform: scale(1.1);
+      }
+      
+      /* Navigation links */
+      .nav-link {
+        color: rgba(255, 255, 255, 0.85) !important;
+        padding: 0.7rem 1.2rem !important;
+        font-size: 1.05rem;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        border-radius: 6px;
+        margin: 0 0.2rem;
+        transition: all 0.3s ease;
+      }
+      
+      .nav-link:hover, .nav-link:focus {
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+      }
+      
+      .nav-link.active {
+        color: #fff !important;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.15);
+      }
+      
+      /* Cart icon */
+      #cart-icon {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+      }
+      
+      #cart-icon:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+      }
+      
+      #cart-icon i {
+        font-size: 1.3rem;
+      }
+      
+      #cart-icon .badge {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        font-size: 0.6rem;
+        padding: 0.35em 0.6em;
+        font-weight: 600;
+        min-width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #ff6b6b;
+        border: 2px solid #343a40;
+      }
+      
+      /* Dropdown menu */
+      .dropdown-menu {
+        min-width: 12rem;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 0.5rem 0;
+        margin-top: 0.5rem;
+      }
+      
+      .dropdown-item {
+        padding: 0.5rem 1.5rem;
+        font-size: 0.95rem;
+        color: #333;
+        transition: all 0.2s ease;
+      }
+      
+      .dropdown-item:hover, .dropdown-item:focus {
+        background: #f8f9fa;
+        color: #000;
+        transform: translateX(3px);
+      }
+      
+      /* Mobile menu */
+      @media (max-width: 991.98px) {
+        .navbar {
+          padding: 0.6rem 0;
+        }
+        
+        .navbar-brand {
+          font-size: 1.6rem;
+        }
+        
+        .navbar-collapse {
+          background: #2c3034;
+          padding: 1rem 1.5rem;
+          margin: 0.8rem -1rem 0;
+          border-radius: 0;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-nav {
+          margin: 0.5rem 0;
+        }
+        
+        .nav-item {
+          margin: 0.3rem 0;
+        }
+        
+        .nav-link {
+          padding: 0.8rem 1rem !important;
+          margin: 0.2rem 0;
+          border-radius: 6px;
+        }
+        
+        .dropdown-menu {
+          margin-left: 1rem;
+          margin-top: 0.3rem;
+          border-radius: 6px;
+        }
+      }
+    </style>
     <!-- End Header -->
 
+    <!-- Fixed offset for navbar -->
+    <div style="height: 60px; width: 100%;"></div>
+
+    {% block hero %}
+    {% if request.path == '/' %}
     <!-- ======= Hero Section ======= -->
-    <section id="hero">
-      <div class="hero-container">
-        {% block content %}
-     
-
-
-        
-        {% endblock content %}
+    <section id="hero" class="d-flex align-items-center">
+      <div class="container position-relative text-center">
+        <h1 class="display-4 fw-bold mb-3">Welcome to TruckBrand</h1>
+        <h2 class="h4 mb-4 text-light">Your Trusted Source for Quality Mustard Oil</h2>
+        <a href="#portfolio" class="btn btn-primary btn-lg btn-shop-now px-4 py-3">
+          <i class="fas fa-shopping-cart me-2"></i>Shop Now
+        </a>
       </div>
     </section>
     <!-- End Hero -->
+    {% endif %}
+    {% endblock %}
 
     <main id="main">
-      {% block body %} 
-    
-  
-      {% endblock body %}</main>
+      <div id="content-wrapper" style="padding-top: 70px;">
+      {% block content %}{% endblock %}
+      {% block body %}{% endblock %}
+    </div>
+    </main>
     <!-- End #main -->
 
 
@@ -212,6 +597,97 @@
 
     <!-- Template Main JS File -->
     <script src="{% static '/assets/js/main.js' %}"></script>
+  
+    <!-- Initialize tooltips and cart functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle functionality
+      const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+      const navbar = document.getElementById('navbar');
+      
+      if (mobileNavToggle && navbar) {
+        mobileNavToggle.addEventListener('click', function(e) {
+          navbar.classList.toggle('mobile-nav-active');
+          this.classList.toggle('bi-list');
+          this.classList.toggle('bi-x');
+        });
+      }
+      
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!navbar.contains(e.target) && !e.target.classList.contains('mobile-nav-toggle')) {
+          navbar.classList.remove('mobile-nav-active');
+          const toggleBtn = document.querySelector('.mobile-nav-toggle');
+          if (toggleBtn) {
+            toggleBtn.classList.add('bi-list');
+            toggleBtn.classList.remove('bi-x');
+          }
+        }
+      });
+
+      // Initialize tooltips
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+
+      // Add click handler for cart icon
+      const cartIcon = document.getElementById('cart-icon');
+      if (cartIcon) {
+        cartIcon.addEventListener('click', function(e) {
+          const cart = JSON.parse(localStorage.getItem('cart')) || {};
+          const itemCount = Object.values(cart).reduce((sum, item) => sum + (item[0] || 0), 0);
+          
+          if (itemCount === 0) {
+            e.preventDefault();
+            // Show a nice message using Bootstrap's toast
+            const toastHTML = `
+              <div class="toast align-items-center text-white bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; z-index: 1100;">
+                <div class="d-flex">
+                  <div class="toast-body">
+                    <i class="fas fa-shopping-cart me-2"></i> Your cart is empty. Please add items to proceed.
+                  </div>
+                  <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+              </div>`;
+            
+            // Remove any existing toast
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+              existingToast.remove();
+            }
+            
+            // Add and show new toast
+            document.body.insertAdjacentHTML('beforeend', toastHTML);
+            const toastEl = document.querySelector('.toast');
+            const toast = new bootstrap.Toast(toastEl, { autohide: true, delay: 3000 });
+            toast.show();
+            
+            // Remove toast from DOM after it's hidden
+            toastEl.addEventListener('hidden.bs.toast', function() {
+              toastEl.remove();
+            });
+            
+            return false;
+          }
+          // If cart has items, proceed with default behavior (redirect to checkout)
+        });
+      }
+    });
+
+    // Function to update cart count in navbar
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || {};
+      const cartCount = Object.values(cart).reduce((sum, item) => sum + (item[0] || 0), 0);
+      const cartBadge = document.querySelector('.navbar .badge');
+      if (cartBadge) {
+        cartBadge.textContent = cartCount;
+      }
+    }
+    
+    // Initialize cart count on page load
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+  </script>
 
     <!-- Add this right before the closing </body> tag -->
     <style>

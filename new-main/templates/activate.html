@@ -1,7 +1,65 @@
 {% autoescape off %}
-
-Hi {{user.username}}
-Please Click this link below to verify your account
-http://{{domain}}{% url 'activate' uidb64=uid token=token %}
-
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .content {
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0d6efd;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            color: #6c757d;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Welcome to TruckBrand!</h2>
+        </div>
+        <div class="content">
+            <p>Hi {{ user.username }},</p>
+            <p>Thank you for registering with TruckBrand. To activate your account, please click the button below:</p>
+            
+            <p style="text-align: center;">
+                <a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}" class="button">
+                    Activate Account
+                </a>
+            </p>
+            
+            <p>This link will expire in 24 hours for security reasons.</p>
+            <p>If you didn't create an account with TruckBrand, you can safely ignore this email.</p>
+            
+            <p>Best regards,<br>The TruckBrand Team</p>
+        </div>
+        <div class="footer">
+            <p>This is an automated email, please do not reply.</p>
+        </div>
+    </div>
+</body>
+</html>
 {% endautoescape %}

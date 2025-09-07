@@ -1,18 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Checkout - TruckBrand{% endblock title %}
 
-{% block content %}
-<div class="container mt-5 pt-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-10">
-      <div class="text-center mb-5">
-        <h1 class="fw-bold text-primary mb-3">Checkout</h1>
-        <p class="lead text-muted">Complete your purchase</p>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock content %}
+{% block content %}{% endblock content %}
 
 {% block body %}
 <section class="checkout-section py-5">
@@ -39,18 +28,25 @@
             <strong>Total</strong>
             <strong id="total" class="text-primary">₹0.00</strong>
           </div>
-          <button id="submit" class="btn btn-primary w-100">
-            Place Order <i class="bi bi-arrow-right ms-2"></i>
-          </button>
         </div>
       </div>
 
       <!-- Checkout Form -->
       <div class="col-lg-8 order-lg-1">
         <div class="checkout-form bg-white p-4 rounded-3 shadow-sm">
-          <form method="post" action="/checkout/">{% csrf_token %}
+          <form method="post" action="{% url 'order_summary' %}" id="checkout-form" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <!-- Hidden fields for form data -->
             <input type="hidden" name="itemsJson" id="itemsJson">
             <input type="hidden" name="amt" id="amt">
+            <input type="hidden" name="name" id="form-name">
+            <input type="hidden" name="email" id="form-email">
+            <input type="hidden" name="phone" id="form-phone">
+            <input type="hidden" name="address1" id="form-address1">
+            <input type="hidden" name="address2" id="form-address2">
+            <input type="hidden" name="city" id="form-city">
+            <input type="hidden" name="state" id="form-state">
+            <input type="hidden" name="zip_code" id="form-zip_code">
 
             <!-- Personal Information -->
             <div class="section mb-5">
@@ -58,20 +54,20 @@
               <div class="row g-3">
                 <div class="col-md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" required>
-                    <label for="name">Full Name</label>
+                    <input type="text" class="form-control" id="input-name" name="name" placeholder="Full Name" required>
+                    <label for="input-name">Full Name</label>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-floating">
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
-                    <label for="email">Email Address</label>
+                    <input type="email" class="form-control" id="input-email" name="email" placeholder="Email" required>
+                    <label for="input-email">Email Address</label>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-floating">
-                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone" required>
-                    <label for="phone">Phone Number</label>
+                    <input type="tel" class="form-control" id="input-phone" name="phone" placeholder="Phone" required>
+                    <label for="input-phone">Phone Number</label>
                   </div>
                 </div>
               </div>
@@ -101,8 +97,49 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="state" name="state" placeholder="State" required>
+                    <select class="form-select" id="state" name="state" required onchange="this.classList.remove('is-invalid')">
+                      <option value="" selected disabled>-- Select a state --</option>
+                      <option value="Andhra Pradesh">Andhra Pradesh</option>
+                      <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                      <option value="Assam">Assam</option>
+                      <option value="Bihar">Bihar</option>
+                      <option value="Chhattisgarh">Chhattisgarh</option>
+                      <option value="Goa">Goa</option>
+                      <option value="Gujarat">Gujarat</option>
+                      <option value="Haryana">Haryana</option>
+                      <option value="Himachal Pradesh">Himachal Pradesh</option>
+                      <option value="Jharkhand">Jharkhand</option>
+                      <option value="Karnataka">Karnataka</option>
+                      <option value="Kerala">Kerala</option>
+                      <option value="Madhya Pradesh">Madhya Pradesh</option>
+                      <option value="Maharashtra">Maharashtra</option>
+                      <option value="Manipur">Manipur</option>
+                      <option value="Meghalaya">Meghalaya</option>
+                      <option value="Mizoram">Mizoram</option>
+                      <option value="Nagaland">Nagaland</option>
+                      <option value="Odisha">Odisha</option>
+                      <option value="Punjab">Punjab</option>
+                      <option value="Rajasthan">Rajasthan</option>
+                      <option value="Sikkim">Sikkim</option>
+                      <option value="Tamil Nadu">Tamil Nadu</option>
+                      <option value="Telangana">Telangana</option>
+                      <option value="Tripura">Tripura</option>
+                      <option value="Uttar Pradesh">Uttar Pradesh</option>
+                      <option value="Uttarakhand">Uttarakhand</option>
+                      <option value="West Bengal">West Bengal</option>
+                      <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                      <option value="Chandigarh">Chandigarh</option>
+                      <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                      <option value="Delhi">Delhi</option>
+                      <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                      <option value="Ladakh">Ladakh</option>
+                      <option value="Lakshadweep">Lakshadweep</option>
+                      <option value="Puducherry">Puducherry</option>
+                    </select>
                     <label for="state">State</label>
+                    <div class="invalid-feedback">
+                      Please select a state
+                    </div>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -113,6 +150,9 @@
                 </div>
               </div>
             </div>
+            <button type="submit" class="btn btn-primary w-100">
+              Review Order <i class="bi bi-arrow-right ms-2"></i>
+            </button>
           </form>
         </div>
       </div>
@@ -121,6 +161,112 @@
 </section>
 
 <style>
+  /* Add invalid field styling */
+  /* Payment Method Styles */
+  .payment-methods {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .payment-option {
+    margin-bottom: 10px;
+  }
+  
+  .payment-radio {
+    display: none;
+  }
+  
+  .payment-label {
+    display: block;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fff;
+  }
+  
+  .payment-radio:checked + .payment-label {
+    border-color: #0d6efd;
+    background-color: #f8f9ff;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+  }
+  
+  .payment-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .payment-icon {
+    font-size: 24px;
+    color: #6c757d;
+    margin-right: 15px;
+    width: 40px;
+    text-align: center;
+  }
+  
+  .payment-details h6 {
+    margin: 0;
+    font-weight: 600;
+    color: #212529;
+  }
+  
+  .payment-details p {
+    margin: 3px 0 0;
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+  
+  .payment-badges {
+    margin-left: auto;
+  }
+  
+  .payment-badges .badge {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+  
+  /* Form validation */
+  .is-invalid,
+  .was-validated .form-control:invalid,
+  .was-validated .form-select:invalid {
+    border-color: #dc3545 !important;
+    background-image: none;
+  }
+  
+  .is-invalid + label,
+  .form-select:invalid + label,
+  .form-select.is-invalid + label {
+    color: #dc3545;
+  }
+  
+  .invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+  }
+  
+  .is-invalid ~ .invalid-feedback,
+  .is-invalid ~ .invalid-tooltip,
+  .form-select.is-invalid ~ .invalid-feedback,
+  .form-select.is-invalid ~ .invalid-tooltip {
+    border-color: #dc3545 !important;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+  }
+  
+  .invalid-feedback {
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+  }
+
   .checkout-section {
     background-color: #f8f9fa;
     min-height: 100vh;
@@ -205,23 +351,59 @@
 </style>
 
 <script>
-if (localStorage.getItem('cart') == null) {
-    var cart = {};
-} else {
-    cart = JSON.parse(localStorage.getItem('cart'));
+// Load cart from localStorage or initialize empty
+let cart = {};
+try {
+    const savedCart = localStorage.getItem('cart');
+    console.log('Saved cart from localStorage:', savedCart);
+    if (savedCart) {
+        cart = JSON.parse(savedCart);
+        console.log('Parsed cart:', cart);
+    } else {
+        console.log('No saved cart found in localStorage');
+    }
+} catch (e) {
+    console.error('Error loading cart:', e);
+    cart = {};
 }
 
 // Update cart display
 function updateCart() {
+    console.log('Updating cart display...');
     let itemsContainer = document.getElementById('items');
     let subtotal = 0;
     itemsContainer.innerHTML = '';
 
+    // Check if cart is empty
+    if (Object.keys(cart).length === 0) {
+        console.log('Cart is empty');
+        itemsContainer.innerHTML = '<div class="text-muted">Your cart is empty</div>';
+        document.getElementById('subtotal').textContent = '₹0.00';
+        document.getElementById('total').textContent = '₹0.00';
+        document.getElementById('amt').value = '0';
+        document.getElementById('itemsJson').value = '{}';
+        return;
+    }
+
+    // Process each item in cart
     for (let id in cart) {
+        if (!cart.hasOwnProperty(id)) continue;
+        
         let item = cart[id];
-        let quantity = item[0];
-        let name = item[1];
+        if (!Array.isArray(item) || item.length < 3) {
+            console.error('Invalid cart item format:', item);
+            continue;
+        }
+
+        let quantity = parseInt(item[0]);
+        let name = String(item[1]);
         let price = parseFloat(item[2]);
+        
+        if (isNaN(quantity) || isNaN(price)) {
+            console.error('Invalid quantity or price:', {id, item});
+            continue;
+        }
+
         let totalPrice = quantity * price;
         subtotal += totalPrice;
 
@@ -229,7 +411,7 @@ function updateCart() {
             <div class="cart-item">
                 <div class="cart-item-details">
                     <div class="cart-item-title">${name}</div>
-                    <div class="cart-item-price">₹${price} × ${quantity}</div>
+                    <div class="cart-item-price">₹${price.toFixed(2)} × ${quantity}</div>
                 </div>
                 <div class="text-end">
                     <strong>₹${totalPrice.toFixed(2)}</strong>
@@ -238,18 +420,107 @@ function updateCart() {
         `;
     }
 
+    console.log('Cart subtotal:', subtotal);
     document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
     document.getElementById('total').textContent = `₹${subtotal.toFixed(2)}`;
     document.getElementById('amt').value = subtotal.toFixed(2);
     document.getElementById('itemsJson').value = JSON.stringify(cart);
+    console.log('Cart updated successfully');
 }
 
 // Initialize cart display
 updateCart();
 
-// Handle form submission
-document.getElementById('submit').addEventListener('click', function() {
-    document.querySelector('form').submit();
+// Enhanced form validation and submission
+document.getElementById('checkout-form').addEventListener('submit', function(e) {
+    // Prevent default form submission
+    e.preventDefault();
+    
+    // Get form elements
+    const form = this;
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    
+    // Get all required fields
+    const requiredFields = form.querySelectorAll('[required]');
+    let isValid = true;
+    
+    // Validate all required fields
+    requiredFields.forEach(function(field) {
+        field.classList.remove('is-invalid');
+        
+        // Skip validation for hidden fields (they'll be validated on the server)
+        if (field.offsetParent === null) return;
+        
+        // Special handling for select elements (like state)
+        if (field.tagName === 'SELECT') {
+            if (!field.value || field.value.trim() === '') {
+                field.classList.add('is-invalid');
+                if (isValid) {
+                    field.focus();
+                    isValid = false;
+                }
+            }
+        } 
+        // Validate other required fields
+        else if (field.value.trim() === '') {
+            field.classList.add('is-invalid');
+            if (isValid) {
+                field.focus();
+                isValid = false;
+            }
+        }
+    });
+    
+    // Get state select element
+    const stateSelect = document.querySelector('select[name="state"]');
+    
+    // If validation failed, stop here
+    if (!isValid) {
+        // Show error message for state if not selected
+        if (stateSelect && !stateSelect.value) {
+            // Remove any existing error messages
+            const existingError = stateSelect.parentNode.querySelector('.invalid-feedback');
+            if (!existingError) {
+                const stateError = document.createElement('div');
+                stateError.className = 'invalid-feedback d-block';
+                stateError.textContent = 'Please select a state';
+                stateSelect.parentNode.appendChild(stateError);
+            }
+        }
+        return false;
+    }
+    
+    // Update cart before submission
+    updateCart();
+    
+    // Get the selected state value
+    const selectedState = stateSelect ? stateSelect.value : '';
+    
+    // Update hidden form fields with visible input values
+    document.getElementById('form-name').value = document.getElementById('input-name').value;
+    document.getElementById('form-email').value = document.getElementById('input-email').value;
+    document.getElementById('form-phone').value = document.getElementById('input-phone').value;
+    document.getElementById('form-address1').value = document.querySelector('input[name="address1"]').value;
+    document.getElementById('form-address2').value = document.querySelector('input[name="address2"]').value || '';
+    document.getElementById('form-city').value = document.querySelector('input[name="city"]').value;
+    document.getElementById('form-state').value = selectedState;
+    document.getElementById('form-zip_code').value = document.querySelector('input[name="zip_code"]').value;
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing...';
+    
+    // Log form data for debugging
+    const formData = new FormData(form);
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+        formDataObj[key] = value;
+    });
+    console.log('Submitting form data:', formDataObj);
+    
+    // Submit the form
+    form.submit();
 });
 </script>
 {% endblock body %}

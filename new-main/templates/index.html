@@ -1,14 +1,13 @@
 {% extends 'base.html' %} 
-{% block title %} HOME{% endblock title %} 
-{% block content %}
+{% block title %}Home - TruckBrand{% endblock title %} 
 
-<h1 class="text-center mt-4 mb-5">Buy Quality Products</h1>
-{% endblock content %} 
-{% block body %} 
+{% block content %}{% endblock %}
+
+{% block body %}
 {% load static %}
 
 <!-- ======= Portfolio Section ======= -->
-<section id="portfolio" class="portfolio py-5">
+<section id="portfolio" class="portfolio py-5" style="padding-top: 2rem !important;">
   <div class="container">
     {% for message in messages %}
     <div
@@ -50,12 +49,14 @@
                   <h6 class="card-title mb-3">
                     Price: <span class="text-primary fw-bold" id="pricepr{{i.id}}">{{i.price}}</span>
                   </h6>
-                  <div id="divpr{{i.id}}" class="divpr d-flex gap-2">
-                    <button id="pr{{i.id}}" class="btn btn-primary cart">
-                      Add To Cart <i class="fa-solid fa-cart-shopping ms-1"></i>
-                    </button>
-                    <a href="/media/{{i.image}}" class="btn btn-outline-dark">
-                      View <i class="fa-solid fa-eye ms-1"></i>
+                  <div id="divpr{{i.id}}" class="divpr d-flex gap-2 align-items-center">
+                    <div id="cart-controls-pr{{i.id}}">
+                      <button type="button" class="btn btn-danger rounded-pill px-3 add-to-cart" data-id="pr{{i.id}}">
+                        Add to Cart
+                      </button>
+                    </div>
+                    <a href="/media/{{i.image}}" class="btn btn-outline-dark ms-2">
+                      <i class="fa-solid fa-eye"></i>
                     </a>
                   </div>
                 </div>
@@ -72,49 +73,74 @@
 
 <style>
   .product-img-wrapper {
-    height: 250px;
+    height: 200px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #f8f9fa;
+    border-radius: 4px 4px 0 0;
   }
-  
   .product-img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
+    padding: 10px;
     transition: transform 0.3s ease;
   }
-  
   .card {
-    border: none;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
   }
-  
   .card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
   }
-  
   .card:hover .product-img {
     transform: scale(1.05);
   }
-  
-  .hover-shadow:hover {
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-  }
-  
-  .transition {
+  .btn-outline-success {
+    border-color: #198754;
+    color: #198754;
     transition: all 0.3s ease;
   }
-
+  .btn-outline-success:hover {
+    background-color: #198754;
+    color: white;
+    transform: translateY(-2px);
+  }
+  .quantity-input {
+    width: 60px;
+    text-align: center;
+    margin: 0 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+  }
+  .quantity-input:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+  .product-category h3 {
+    position: relative;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+  }
+  .product-category h3:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: #198754;
+  }
   .container {
     max-width: 1140px;
     margin: 0 auto;
   }
-
   @media (min-width: 768px) {
     .container {
       max-width: 960px;
@@ -138,126 +164,218 @@
     crossorigin="anonymous"
   ></script>
 
+  <style>
+    .quantity-selector {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #dee2e6;
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .quantity-btn {
+      background: #f8f9fa;
+      border: none;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      font-size: 1.1rem;
+      color: #333;
+      transition: all 0.2s ease;
+    }
+    .quantity-btn:active {
+      background: #e9ecef;
+      transform: scale(0.95);
+    }
+    .quantity-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .quantity-display {
+      min-width: 40px;
+      padding: 0 5px;
+      text-align: center;
+      font-weight: 600;
+      color: #333;
+      user-select: none;
+    }
+    /* Hover effects */
+    .quantity-btn:not(:disabled):hover {
+      background: #e9ecef;
+    }
+    .btn-group {
+      transition: all 0.3s ease;
+    }
+  </style>
+  
   <script>
-    //find pout the card from local storage
-
-    if (localStorage.getItem("cart") == null) {
-      var cart = {};
-    } else {
-      cart = JSON.parse(localStorage.getItem("cart"));
-      updateCart(cart);
-    }
-    // add or increment code
-
-    // $('.cart').click(function() {
-    $(".divpr").on("click", "button.cart", function () {
-      var idstr = this.id.toString();
-      console.log(idstr);
-
-      if (cart[idstr] != undefined) {
-        qty = cart[idstr][0] + 1;
-      } else {
-        qty = 1;
-        name = document.getElementById("name" + idstr).innerHTML;
-        price = document.getElementById("price" + idstr).innerHTML;
-        cart[idstr] = [qty, name, price];
+    // Handle cart interactions
+    document.addEventListener('click', function(e) {
+      // Handle Add to Cart button click
+      const addToCartBtn = e.target.closest('.add-to-cart');
+      if (addToCartBtn) {
+        e.preventDefault();
+        const id = addToCartBtn.dataset.id;
+        // Always set quantity to 1 when clicking Add to Cart
+        const cart = JSON.parse(localStorage.getItem('cart')) || {};
+        const name = document.getElementById(`name${id}`)?.textContent || 'Product';
+        const priceText = document.getElementById(`price${id}`)?.textContent || '0';
+        const price = parseFloat(priceText.replace(/[^0-9.-]+/g, ''));
+        
+        // Set quantity to 1
+        cart[id] = [1, name, price];
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Update UI
+        showQuantityControls(id, 1);
+        updateCartCount();
+        return;
       }
-      updateCart(cart);
-
-      localStorage.setItem("cart", JSON.stringify(cart));
-      document.getElementById("cart").innerHTML = Object.keys(cart).length;
-      console.log(Object.keys(cart).length);
-      document.getElementById("popcart").click();
+      
+      // Handle plus button click
+      const plusBtn = e.target.closest('.btn-increase');
+      if (plusBtn) {
+        e.preventDefault();
+        const id = plusBtn.dataset.id;
+        updateQuantity(id, 1);
+        return;
+      }
+      
+      // Handle minus button click
+      const minusBtn = e.target.closest('.btn-decrease');
+      if (minusBtn) {
+        e.preventDefault();
+        const id = minusBtn.dataset.id;
+        updateQuantity(id, -1);
+        return;
+      }
     });
-    // add pop over to cart
-
-    $("#popcart").popover();
-
-    updatePopover(cart);
-    function updatePopover(cart) {
-      console.log("we are  inside update popover");
-
-      var popStr = "";
-      var popStr =
-        popStr +
-        "<h5> cart for your items in my shopping cart </h5> <div class='mx-2 my-2'>";
-      var i = 1;
-      for (var item in cart) {
-        popStr = popStr + "<b>" + i + "</b>. ";
-        popStr =
-          popStr +
-          document.getElementById("name" + item).innerHTML.slice(0, 19) +
-          "..." +
-          "<b>" +
-          cart[item][0] +
-          "</b>" +
-          "Qty" +
-          "<br>";
-        i = i + 1;
-      }
-
-      popStr =
-        popStr +
-        "</div> <a href='/checkout'><button class='btn btn-success' id='clearCart'>Checkout</button></a>  <button class='btn btn-dark' onclick='clearCart()' id='clearCart'>ClearCart</button>";
-      document.getElementById("popcart").setAttribute("data-content", popStr);
-      $("#popcart").popover("show");
-      document.getElementById("popcart").click();
+    
+    // Show quantity controls
+    function showQuantityControls(id, quantity = 1) {
+      const controlsContainer = document.getElementById(`cart-controls-${id}`);
+      if (!controlsContainer) return;
+      
+      controlsContainer.innerHTML = `
+        <div class="quantity-selector">
+          <button type="button" class="btn-decrease quantity-btn" data-id="${id}">
+            <i class="fas fa-minus"></i>
+          </button>
+          <span class="quantity-display">${quantity}</span>
+          <button type="button" class="btn-increase quantity-btn" data-id="${id}">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      `;
     }
-
-    function clearCart() {
-      cart = JSON.parse(localStorage.getItem("cart"));
-      for (var item in cart) {
-        document.getElementById("div" + item).innerHTML =
-          '<button id="' +
-          item +
-          '" class="btn btn-danger cart">AddtoCard <i class="fa-solid fa-cart-shopping"></i></button>';
+    
+    function updateQuantity(id, change) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || {};
+      const name = document.getElementById(`name${id}`)?.textContent || 'Product';
+      const priceText = document.getElementById(`price${id}`)?.textContent || '0';
+      const price = parseFloat(priceText.replace(/[^0-9.-]+/g, ''));
+      
+      // Calculate new quantity
+      const currentQty = cart[id] ? cart[id][0] : 0;
+      const newQty = currentQty + change;
+      
+      if (newQty > 0) {
+        // Update quantity if greater than 0
+        cart[id] = [newQty, name, price];
+        localStorage.setItem('cart', JSON.stringify(cart));
+        showQuantityControls(id, newQty);
+      } else {
+        // Remove item if quantity is 0 or less
+        delete cart[id];
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Reset to Add to Cart button
+        const controlsContainer = document.getElementById(`cart-controls-${id}`);
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <button type="button" class="btn btn-danger rounded-pill px-3 add-to-cart" data-id="${id}">
+              Add to Cart
+            </button>
+          `;
+          
+          // Re-attach the click event to the new button
+          const newButton = controlsContainer.querySelector('.add-to-cart');
+          if (newButton) {
+            newButton.addEventListener('click', function(e) {
+              e.preventDefault();
+              updateQuantity(id, 1);
+            });
+          }
+        }
       }
-      localStorage.clear();
-      cart = {};
-      updateCart(cart);
-
-      let clear = document.getElementById("popcart").click();
-      document.getElementById("popcart").click();
+      
+      // Always update cart UI after any change
+      const event = new Event('cartUpdated');
+      document.dispatchEvent(event);
+      
+      // Update cart count in navbar
+      updateCartCount();
     }
-
-    function updateCart(cart) {
-      var sum = 0;
-      for (var item in cart) {
-        sum = sum + cart[item][0];
-        document.getElementById("div" + item).innerHTML =
-          "<button id='minus" +
-          item +
-          "'class='btn btn-success minus'>-</button> <span id='val" +
-          item +
-          "''>" +
-          cart[item][0] +
-          "</span> <button id='plus" +
-          item +
-          "' class='btn btn-success plus'> + </button>";
+    
+    function updateCartButton(id, quantity) {
+      const controlsContainer = document.getElementById(`cart-controls-${id}`);
+      if (!controlsContainer) return;
+      
+      // Update minus button state
+      const minusBtn = controlsContainer.querySelector('.btn-decrease');
+      const qtyDisplay = controlsContainer.querySelector('.quantity-display');
+      const plusBtn = controlsContainer.querySelector('.btn-increase');
+      
+      if (minusBtn && qtyDisplay && plusBtn) {
+        // Update existing controls
+        minusBtn.disabled = quantity <= 0;
+        qtyDisplay.textContent = quantity;
+        plusBtn.disabled = false;
+      } else {
+        // Initialize new controls
+        controlsContainer.innerHTML = `
+          <button type="button" class="btn-decrease quantity-btn" data-id="${id}" ${quantity <= 0 ? 'disabled' : ''}>
+            <i class="fas fa-minus"></i>
+          </button>
+          <span class="quantity-display">${quantity}</span>
+          <button type="button" class="btn-increase quantity-btn" data-id="${id}" ${quantity >= 10 ? 'disabled' : ''}>
+            <i class="fas fa-plus"></i>
+          </button>
+        `;
       }
-      localStorage.setItem("cart", JSON.stringify(cart));
-      document.getElementById("cart").innerHTML = sum;
-      console.log(cart);
-      updatePopover(cart);
-      document.getElementById("popcart").click();
     }
-
-    //if plus or minus button is clicked change the cart as well as the display value
-    $(".divpr").on("click", "button.minus", function () {
-      a = this.id.slice(7);
-      cart["pr" + a][0] = cart["pr" + a][0] - 1;
-      cart["pr" + a][0] = Math.max(0, cart["pr" + a][0]);
-      document.getElementById("valpr" + a).innerHTML = cart["pr" + a][0];
-      updateCart(cart);
-    })
-
-    $(".divpr").on("click", "button.plus", function () {
-      a = this.id.slice(6);
-      cart["pr" + a][0] = cart["pr" + a][0] + 1;
-
-      document.getElementById("valpr" + a).innerHTML = cart["pr" + a][0];
-      updateCart(cart);
-    })
+    
+    // Initialize cart buttons on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || {};
+      
+      // Initialize all product quantities
+      document.querySelectorAll('[id^="cart-controls-pr"]').forEach(control => {
+        const id = control.id.replace('cart-controls-', '');
+        if (cart[id]) {
+          showQuantityControls(id, cart[id][0]);
+        }
+      });
+      
+      // Initial cart count update
+      updateCartCount();
+    });
+    
+    // Listen for cart updates
+    document.addEventListener('cartUpdated', updateCartCount);
+    
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || {};
+      const cartCount = Object.values(cart).reduce((sum, item) => sum + item[0], 0);
+      const cartBadge = document.querySelector('.navbar .badge');
+      if (cartBadge) {
+        cartBadge.textContent = cartCount;
+      }
+    }
   </script>
   {% endblock body %}
-

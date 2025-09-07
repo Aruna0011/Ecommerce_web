@@ -62,17 +62,17 @@ h6 {
 #header {
   transition: all 0.5s;
   z-index: 997;
-  padding: 20px 0;
+  padding: 15px 0;
 }
 
 #header .logo {
-  font-size: 30px;
+  font-size: 22px;
   margin: 0;
   padding: 0;
   line-height: 1;
   font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-family: "Poppins", sans-serif;
 }
 
 #header .logo a {
@@ -103,17 +103,23 @@ h6 {
   margin: 0;
   padding: 0;
   display: flex;
-  list-style: none;
   align-items: center;
+  list-style: none;
+  height: 100%;
 }
 
 .navbar li {
   position: relative;
 }
 
-.navbar>ul>li {
+.navbar > ul > li {
   white-space: nowrap;
-  padding: 10px 0 10px 24px;
+  padding: 0 0 0 12px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  line-height: 1;
 }
 
 .navbar a,
@@ -121,14 +127,14 @@ h6 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 6px 0 6px 8px;
   font-family: "Poppins", sans-serif;
-  color: #fff;
-  font-size: 15px;
-  padding: 0 4px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
   white-space: nowrap;
   transition: 0.3s;
-  letter-spacing: 0.4px;
   position: relative;
+  line-height: 1;
 }
 
 .navbar a i,
@@ -350,15 +356,17 @@ h6 {
 --------------------------------------------------------------*/
 #hero {
   width: 100%;
-  height: 100vh;
+  height: 80vh;
   background: url("../../images/bgg.jpg") top center;
   background-size: cover;
   position: relative;
+  padding-top: 45px; /* Matches navbar height */
+  margin-top: 0;
 }
 
 #hero:before {
   content: "";
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   position: absolute;
   bottom: 0;
   top: 0;
@@ -378,6 +386,7 @@ h6 {
   flex-direction: column;
   text-align: center;
   padding: 0 15px;
+  z-index: 2;
 }
 
 #hero h3 {
@@ -423,34 +432,7 @@ h6 {
   border: 2px solid #e43c5c;
 }
 
-@media (min-width: 1024px) {
-  #hero {
-    background-attachment: fixed;
-  }
-}
-
-@media (max-width: 768px) {
-  #hero h3 {
-    font-size: 22px;
-  }
-
-  #hero h1 {
-    font-size: 28px;
-    line-height: 36px;
-  }
-
-  #hero h2 {
-    font-size: 18px;
-    line-height: 24px;
-    margin-bottom: 30px;
-  }
-}
-
-@media (max-height: 500px) {
-  #hero {
-    height: 150vh;
-  }
-}
+/* Hero section media queries removed */
 
 /*--------------------------------------------------------------
 # Sections General
@@ -1842,6 +1824,203 @@ section {
   padding-left: 5px;
   color: #dfd8d9;
   font-size: 14px;
+}
+
+/*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+#header {
+  height: 60px;
+  min-height: 60px;
+  transition: all 0.3s;
+  z-index: 997;
+  background: #000 !important;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+
+/* Force content below fixed navbar */
+body {
+  padding-top: 60px !important;
+  margin: 0 !important;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Ensure main content is always below navbar */
+main#main {
+  position: relative;
+  z-index: 1;
+  padding-top: 20px;
+}
+
+/* Fix for fixed navbar spacing */
+body:after {
+  content: '';
+  display: block;
+  height: 60px;
+  margin-top: -60px;
+  visibility: hidden;
+}
+
+/* Home page specific */
+body.home {
+  padding-top: 0 !important;
+}
+
+/* Main content container */
+.container {
+  padding-top: 20px !important;
+}
+
+/* Ensure all pages have space below navbar */
+body:not(.home) .container {
+  padding-top: 30px !important;
+}
+
+/* Make sure nothing is hidden behind navbar */
+body:not(.home) > :not(header) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Content spacing for inner pages */
+body.inner-page main#main {
+  padding-top: 30px; /* Reduced padding since body already has padding */
+  min-height: calc(100vh - 90px); /* Adjusted for both paddings */
+  margin-top: 0;
+}
+
+/* Home page specific adjustments */
+body.home #hero {
+  padding-top: 45px; /* Matches navbar height */
+  margin-top: 0;
+}
+
+/* Ensure content doesn't hide behind fixed navbar */
+:target::before {
+  content: "";
+  display: block;
+  height: 60px; /* Same as header height */
+  margin: -60px 0 0; /* Negative top margin to pull up the anchor */
+  visibility: hidden;
+}
+
+/* Navbar links */
+.navbar ul li {
+  position: relative;
+  white-space: nowrap;
+  padding: 10px 0 10px 12px;
+}
+
+.navbar a, 
+.navbar a:focus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  font-family: "Poppins", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8) !important;
+  white-space: nowrap;
+  transition: 0.3s;
+  position: relative;
+}
+
+.navbar a i, 
+.navbar a:focus i {
+  font-size: 12px;
+  line-height: 0;
+  margin-left: 5px;
+}
+
+.navbar a:hover, 
+.navbar .active, 
+.navbar .active:focus, 
+.navbar li:hover > a {
+  color: #fff !important;
+  text-decoration: none;
+}
+
+.navbar .dropdown ul {
+  display: block;
+  position: absolute;
+  left: 14px;
+  top: calc(100% + 10px);
+  margin: 0;
+  padding: 10px 0;
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  background: #fff;
+  box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
+  transition: 0.3s;
+  border-radius: 4px;
+}
+
+.navbar .dropdown ul li {
+  min-width: 200px;
+  padding: 0;
+}
+
+.navbar .dropdown ul a {
+  padding: 10px 20px;
+  font-size: 14px;
+  text-transform: none;
+  color: #000 !important;
+}
+
+.navbar .dropdown ul a i {
+  font-size: 12px;
+}
+
+.navbar .dropdown ul a:hover, 
+.navbar .dropdown ul .active:hover, 
+.navbar .dropdown ul li:hover > a {
+  color: #000 !important;
+  background: #f6f9ff;
+}
+
+.navbar .dropdown:hover > ul {
+  opacity: 1;
+  top: 100%;
+  visibility: visible;
+}
+
+/* Cart button */
+#cartButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 15px;
+  transition: all 0.3s;
+}
+
+#cartButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#cart {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-dark .logo {
+  color: #fff !important;
 }
 
 /*--------------------------------------------------------------

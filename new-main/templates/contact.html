@@ -1,26 +1,27 @@
 {% extends "base.html" %}
-{% block title %}Contact us - TruckBrand{% endblock title %}
-{% block content %}
-<div class="container mt-5 pt-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-10">
-      <div class="text-center mb-5">
-        <h1 class="fw-bold text-primary mb-3">Contact Us</h1>
-        <p class="lead text-muted">Get in touch with us</p>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock content %}
+{% block title %}Contact Us - TruckBrand{% endblock title %}
+{% block content %}{% endblock content %}
 
 {% block body %}
-<section class="contact-section py-5 bg-light">
+<!-- Page Header -->
+<header class="bg-dark py-5">
+  <div class="container">
+    <div class="text-center text-white">
+      <h1 class="display-5 fw-bold">Contact Us</h1>
+      <p class="lead mb-0">We'd love to hear from you</p>
+    </div>
+  </div>
+</header>
+
+<section class="contact-section py-5">
   <div class="container">
     <div class="row g-4">
-      <!-- Contact Information -->
-      <div class="col-lg-4">
-        <div class="contact-info bg-white p-4 p-lg-5 rounded-3 shadow-sm h-100">
-          <h3 class="h4 mb-4 pb-2 border-bottom">Get In Touch</h3>
+      <!-- Left Column - Contact Information -->
+      <div class="col-md-5 col-lg-4">
+        <div class="contact-info bg-white p-3 rounded-3 shadow-sm">
+          <h3 class="h4 mb-4 pb-3 border-bottom border-2 border-primary">
+            <i class="fas fa-envelope-open-text me-2 text-primary"></i> Get In Touch
+          </h3>
           
           <div class="contact-item mb-4 pb-2">
             <div class="d-flex align-items-center mb-3">
@@ -40,7 +41,7 @@
               <h4 class="h6 mb-0 text-dark">Phone</h4>
             </div>
             <p class="text-muted mb-0 ps-4">
-              <a href="tel:+911234567890" class="text-decoration-none text-muted hover-primary">+91 123 456 7890</a>
+              <a href="tel:+9958036583" class="text-decoration-none text-muted hover-primary">+91 123 456 7890</a>
             </p>
           </div>
 
@@ -61,26 +62,29 @@
               <div class="icon-wrapper me-3">
                 <i class="bi bi-clock-fill text-primary"></i>
               </div>
-              <h4 class="h6 mb-0 text-dark">Business Hours</h4>
+              <h4 class="h6 mb-0 text-dark">Hours</h4>
             </div>
-            <p class="text-muted mb-0 ps-4">
-              Monday - Saturday: 9:00 AM - 6:00 PM<br>
-              Sunday: Closed
+            <p class="text-muted mb-0 ps-4"> 9:00 AM - 7:00 PM<br>
+             <b> NOTE:- Saturday is  Closed<b>
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Contact Form -->
-      <div class="col-lg-8">
-        <div class="contact-form bg-white p-4 rounded-3 shadow-sm">
+      <!-- Right Column - Contact Form -->
+      <div class="col-md-7 col-lg-7">
+        <div class="contact-form bg-white p-3 rounded-3 shadow-sm">
+          <h3 class="h4 mb-4 pb-3 border-bottom border-2 border-primary">
+            <i class="fas fa-paper-plane me-2 text-primary"></i> Send Us a Message
+          </h3>
+          
           {% for message in messages %}
           <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
             <strong>{{message}}</strong>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
           </div>
           {% endfor %}
-
+          
           <form action="/contact" method="post" class="row g-3"> {% csrf_token %}
             <div class="col-md-6">
               <div class="form-floating">
@@ -110,8 +114,8 @@
               </div>
             </div>
 
-            <div class="col-12">
-              <button type="submit" class="btn btn-primary">Send Message</button>
+            <div class="col-12 form-actions">
+              <button type="submit" class="btn btn-primary w-100">Send Message</button>
             </div>
           </form>
         </div>
@@ -123,7 +127,7 @@
       <div class="col-12">
         <div class="map-container rounded-3 shadow-sm overflow-hidden">
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14024.337522423518!2d76.97912716977537!3d28.607069699999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d0538964aaaaB%3A0x1b6bb05953e06235!2sNajafgarh%2C%20Delhi!5e0!3m2!1sen!2sin!4v1650000000000!5m2!1sen!2sin"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3501.2345678901234!2d76.99999999999999!3d28.61111111111111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d0fa82db85b7b%3A0xef23873aa8fc97d3!2sTruck%20Brand%20Mustard%20Oil%20Mill!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
             width="100%" 
             height="450" 
             style="border:0;" 
@@ -132,18 +136,45 @@
             referrerpolicy="no-referrer-when-downgrade">
           </iframe>
         </div>
+        <div class="text-center mt-3">
+          <p class="mb-0">Truck Brand, Najafgarh, New Delhi, India</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <style>
+  /* Modern UI Enhancements */
   .contact-section {
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .contact-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 300px;
+    background: #0d6efd;
+    z-index: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
   }
 
   .contact-info {
-    position: relative;
+    position: sticky;
+    top: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.1);
+    height: 100%;
+  }
+  
+  .contact-info:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
   }
 
   .contact-info .icon-wrapper {
@@ -171,14 +202,40 @@
     background-color: rgba(0,0,0,0.05);
   }
 
+  .hover-primary {
+    transition: all 0.3s ease;
+    position: relative;
+    padding-left: 5px;
+  }
+  
   .hover-primary:hover {
     color: #0d6efd !important;
-    transition: color 0.2s ease;
+    padding-left: 10px;
+  }
+  
+  .hover-primary::after {
+    content: '→';
+    position: absolute;
+    right: -20px;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .hover-primary:hover::after {
+    opacity: 1;
+    right: -15px;
   }
 
   .form-floating > .form-control {
     height: calc(3.5rem + 2px);
     line-height: 1.25;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+  }
+  
+  .form-floating > .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
   }
 
   .form-floating > label {
@@ -188,7 +245,16 @@
   .map-container {
     position: relative;
     width: 100%;
-    background: #f8f9fa;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .map-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
   }
 
   .map-container iframe {
@@ -197,8 +263,32 @@
 
   @media (max-width: 991.98px) {
     .contact-info {
-      margin-bottom: 2rem;
+      margin-top: 1.5rem;
+      position: static !important;
+      top: auto !important;
     }
+    
+    .contact-section::before {
+      height: 200px;
+    }
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
+  }
+  
+  form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-actions {
+    margin-top: auto;
+    padding-top: 1rem;
   }
 
   /* Custom color styles */
@@ -209,6 +299,23 @@
   .btn-primary {
     background-color: #0d6efd;
     border-color: #0d6efd;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+  }
+  
+  .btn-primary:active {
+    transform: translateY(0);
   }
   
   .btn-primary:hover {
