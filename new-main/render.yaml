@@ -20,22 +20,52 @@ services:
         value: "1"
       - key: DISABLE_COLLECTSTATIC
         value: "0"
+      - key: RENDER
+        value: "true"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: truckbrand-db
+          property: connectionString
+      # Email settings
+      - key: EMAIL_HOST
+        value: "smtp.gmail.com"
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_USE_TLS
+        value: "true"
+      - key: EMAIL_HOST_USER
+        value: "your-email@gmail.com"  # Update with your email
+      - key: EMAIL_HOST_PASSWORD
+        value: "your-email-password"   # Update with your email password
+      - key: DEFAULT_FROM_EMAIL
+        value: "your-email@gmail.com"  # Update with your email
+      # PayTM settings
+      - key: PAYTM_MERCHANT_ID
+        value: "7678143019@pthdfc"
+      - key: PAYTM_MERCHANT_KEY
+        value: "your-merchant-key"     # Update with your PayTM merchant key
+      - key: PAYTM_WEBSITE
+        value: "DEFAULT"
+      - key: PAYTM_CHANNEL_ID
+        value: "WEB"
+      - key: PAYTM_INDUSTRY_TYPE_ID
+        value: "Retail"
+      - key: PAYTM_CALLBACK_URL
+        value: "https://your-render-url.onrender.com/handlerequest/"  # Update with your Render URL
     plan: free
     numInstances: 1
     healthCheckPath: /
     autoDeploy: yes
 
-  # Uncomment and configure this section if you're using a PostgreSQL database
-  # - type: postgres
-  #   name: truckbrand-db
-  #   plan: free
-  #   disk:
-  #     name: truckbrand-db-disk
-  #     sizeGB: 1
-  #     mountPath: /var/lib/postgresql/data
-  #   databases:
-  #     - name: truckbrand
-  #       user: truckbrand_user
+  - type: postgres
+    name: truckbrand-db
+    plan: free
+    databaseName: truckbrand
+    user: truckbrand_user
   #   ipAllowList: []
   #   autoUpgrade: true
   #   maintenanceWindow: saturday-23:00-UTC

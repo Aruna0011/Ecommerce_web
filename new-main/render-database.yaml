@@ -1,0 +1,6 @@
+# Render Database Configuration
+databases:
+  - name: truckbrand-db
+    databaseName: truckbrand
+    user: truckbrand_user
+    plan: free

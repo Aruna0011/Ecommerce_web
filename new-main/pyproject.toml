@@ -9,7 +9,6 @@ requires-python = ">=3.10,<3.11"
 dependencies = [
     "Django==4.2.7",
     "gunicorn==21.2.0",
-    "whitenoise==6.5.0",
     "psycopg2-binary==2.9.9",
     "Pillow==10.1.0",
     "python-magic==0.4.27",
