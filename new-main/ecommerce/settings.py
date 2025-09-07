@@ -10,28 +10,60 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
-import django
-from django.utils.encoding import force_str
+import sys
 from pathlib import Path
+from django.contrib.messages import constants as messages
+from django.utils.encoding import force_str
 
 # Initialize Django's force_text
-django.utils.encoding.force_text = force_str
-
-from django.contrib import messages
+from django.utils.encoding import force_text
+force_text = force_str
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Database configuration
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+# Try to use PostgreSQL if DATABASE_URL is set
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    try:
+        import dj_database_url
+        print("Configuring database from DATABASE_URL...")
+        db_config = dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+        db_config['CONN_MAX_AGE'] = 600
+        db_config['CONN_HEALTH_CHECKS'] = True
+        db_config['OPTIONS'] = {
+            'sslmode': 'require'
+        }
+        DATABASES['default'] = db_config
+        print(f"Successfully configured {db_config['ENGINE']} database")
+    except ImportError:
+        print("Warning: dj-database-url package not found. Using SQLite.")
+    except Exception as e:
+        print(f"Error configuring database from DATABASE_URL: {e}")
+        print("Falling back to SQLite database")
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+unq*a1_%g%j9of-%+r%yo&1799jfck+ty!n935gkp$36imd^!'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-+unq*a1_%g%j9of-%+r%yo&1799jfck+ty!n935gkp$36imd^!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -49,6 +81,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,15 +111,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(BASE_DIR / 'db.sqlite3'),
-    }
-}
+# Database configuration is now handled at the top of the file
 
 
 # Password validation
@@ -119,18 +144,17 @@ USE_I18N = True
 
 USE_TZ = True
 
-#sending emails
-EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_HOST_USER='truckbrand0011@gmail.com'
-EMAIL_HOST_PASSWORD='uaxdjcnijlajziua'
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 
 
 
 
-import os
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
@@ -143,6 +167,10 @@ STATICFILES_DIRS = [
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Simplified static file serving in production
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

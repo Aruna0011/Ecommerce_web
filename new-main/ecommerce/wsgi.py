@@ -11,10 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-# Use production settings in production environment
-if os.environ.get('RENDER', '').lower() == 'true':
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce.production_settings')
-else:
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce.settings')
+# Always use the main settings module
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce.settings')
 
 application = get_wsgi_application()
