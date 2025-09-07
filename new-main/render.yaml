@@ -9,7 +9,7 @@ services:
     startCommand: "gunicorn ecommerce.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
-        value: "3.9.0"
+        value: "3.10.12"
       - key: DJANGO_SETTINGS_MODULE
         value: "ecommerce.settings.production"
       - key: PYTHONUNBUFFERED

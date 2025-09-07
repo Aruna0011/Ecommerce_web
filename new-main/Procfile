@@ -1,1 +1,1 @@
-web: gunicorn ecommerce.wsgi:application
+web: gunicorn ecommerce.wsgi:application --log-file - --workers 2 --threads 4 --worker-class=gthread
