@@ -10,5 +10,4 @@ urlpatterns = [
     path('order_summary/', views.show_order_summary, name='order_summary'),
     path('process-payment/', views.process_payment, name='process_payment'),
     path('payment-success/', views.payment_success, name='payment_success'),
-    path('handlerequest/', views.handlerequest, name='handlerequest'),
 ]

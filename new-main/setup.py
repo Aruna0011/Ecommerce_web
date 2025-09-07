@@ -17,7 +17,7 @@ setup(
     python_requires=">=3.10,<3.11",
     author="Your Name",
     author_email="your.email@example.com",
-    description="E-commerce website with PayTM integration",
+    description="E-commerce website for TruckBrand",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     url="https://github.com/Aruna0011/Ecommerce_web",

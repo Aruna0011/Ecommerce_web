@@ -47,14 +47,6 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
-# PayTM Configuration
-PAYTM_MERCHANT_ID = os.environ.get('PAYTM_MERCHANT_ID')
-PAYTM_MERCHANT_KEY = os.environ.get('PAYTM_MERCHANT_KEY')
-PAYTM_WEBSITE = os.environ.get('PAYTM_WEBSITE', 'DEFAULT')
-PAYTM_CHANNEL_ID = os.environ.get('PAYTM_CHANNEL_ID', 'WEB')
-PAYTM_INDUSTRY_TYPE_ID = os.environ.get('PAYTM_INDUSTRY_TYPE_ID', 'Retail')
-PAYTM_CALLBACK_URL = os.environ.get('PAYTM_CALLBACK_URL', 'https://your-render-url.com/handlerequest/')
-
 # Logging
 LOGGING = {
     'version': 1,

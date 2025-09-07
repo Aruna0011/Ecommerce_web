@@ -7,6 +7,5 @@ recursive-include ecommerce/templates *
 recursive-include media *
 recursive-include static *
 recursive-include templates *
-recursive-include PayTm *
 recursive-include cart *
 recursive-include truckbrand *

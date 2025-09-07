@@ -73,29 +73,7 @@
                 </label>
               </div>
               
-              <div class="form-check mb-3 payment-method">
-                <input class="form-check-input" type="radio" name="payment_method" id="online" value="online">
-                <label class="form-check-label w-100 p-3 border rounded d-flex align-items-center" for="online" style="cursor: pointer;">
-                  <div class="me-3">
-                    <i class="bi bi-credit-card fs-4 text-primary"></i>
-                  </div>
-                  <div>
-                    <h6 class="mb-1">Pay Online</h6>
-                    <p class="small text-muted mb-0">Secure payment via PayTM</p>
-                  </div>
-                </label>
-              </div>
-              
-              <!-- PayTM Payment Info (initially hidden) -->
-              <div id="paytm-info" class="alert alert-info p-3 d-none">
-                <div class="d-flex">
-                  <i class="bi bi-info-circle-fill me-2 mt-1"></i>
-                  <div>
-                    <h6 class="alert-heading mb-2">Secure Payment</h6>
-                    <p class="mb-0">You'll be redirected to PayTM's secure payment page to complete your purchase.</p>
-                  </div>
-                </div>
-              </div>
+              <!-- Online payment option has been removed. Only Cash on Delivery is available. -->
             </div>
             
             <div class="d-grid">
@@ -163,34 +141,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Get form elements
     const paymentForm = document.getElementById('payment-form');
-    const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
     const buttonText = document.getElementById('button-text');
     const spinner = document.getElementById('spinner');
-    const paytmInfo = document.getElementById('paytm-info');
     
-    // Update payment button text and show/hide payment info based on selected method
-    function updatePaymentButton() {
-      const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
-      const cartTotal = parseFloat('{{ cart_total|default:0|floatformat:2 }}');
-      
-      if (selectedMethod === 'online') {
-        buttonText.textContent = 'Proceed to Pay ₹' + cartTotal.toFixed(2);
-        paytmInfo.classList.remove('d-none');
-      } else {
-        buttonText.textContent = 'Place Order (Cash on Delivery)';
-        paytmInfo.classList.add('d-none');
-      }
-    }
-    
-    // Handle payment method change
-    if (paymentMethods && paymentMethods.length > 0) {
-        paymentMethods.forEach(method => {
-            method.addEventListener('change', updatePaymentButton);
-        });
-    }
-    
-    // Initialize button text
-    updatePaymentButton();
+    // Set button text to Cash on Delivery
+    buttonText.textContent = 'Place Order (Cash on Delivery)';
     
     // Handle form submission
     if (paymentForm) {

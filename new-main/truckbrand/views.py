@@ -11,9 +11,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.db import transaction
 
-# Import PayTM config
-from .paytm_config import *
-from paytmchecksum import PaytmChecksum
 # Create your views here.
 def index(request):
     allprods=[]
@@ -231,8 +228,7 @@ def show_order_summary(request):
                 'email': email
             },
             'payment_methods': [
-                {'id': 'cod', 'name': 'Cash on Delivery', 'description': 'Pay when you receive your order'},
-                {'id': 'online', 'name': 'Online Payment', 'description': 'Pay securely with PayTM'}
+                {'id': 'cod', 'name': 'Cash on Delivery', 'description': 'Pay when you receive your order'}
             ],
             'form_data': {
                 'itemsJson': items_json,
@@ -272,11 +268,8 @@ def show_order_summary(request):
 
 @require_http_methods(["POST"])
 def process_payment(request):
-    """Process the payment based on selected method"""
+    """Process the order for Cash on Delivery"""
     try:
-        # Get payment method from form
-        payment_method = request.POST.get('payment_method')
-        
         # Get order data from form
         order_data = {
             'name': request.POST.get('name', ''),
@@ -311,212 +304,36 @@ def process_payment(request):
                 state=order_data['state'],
                 zip_code=order_data['zip_code'],
                 phone=order_data['phone'],
-                paymentstatus='PENDING'
+                paymentstatus='COD'  # Set to COD by default
             )
             
             # Create initial order update
             OrderUpdate.objects.create(
                 order_id=order.order_id,
-                update_desc="Order placed. Payment pending.",
+                update_desc="Order placed. Payment will be collected on delivery.",
                 delivered=False
             )
             
-            # Process payment based on method
-            if payment_method == 'COD':
-                # For Cash on Delivery
-                order.paymentstatus = 'COD'
-                order.save()
-                
-                OrderUpdate.objects.create(
-                    order_id=order.order_id,
-                    update_desc="Order confirmed. Payment will be collected on delivery.",
-                    delivered=False
-                )
-                
-                # Clear cart after successful order placement
-                if 'cart' in request.session:
-                    del request.session['cart']
-                
-                # Store order ID in session for the success page
-                request.session['order_id'] = str(order.order_id)
-                
-                return render(request, 'payment_success.html', {
-                    'order': order,
-                    'payment_method': 'Cash on Delivery',
-                    'status': 'confirmed'
-                })
-                
-            elif payment_method == 'online':
-                # For PayTM Online Payment
-                order.paymentstatus = 'PENDING'
-                order.save()
-                
-                # Store order ID in session for callback verification
-                request.session['order_id'] = str(order.order_id)
-                
-                # Prepare parameters for PayTM
-                param_dict = {
-                    'MID': PAYTM_MERCHANT_ID,
-                    'ORDER_ID': str(order.order_id),
-                    'CUST_ID': order.email,
-                    'TXN_AMOUNT': str(order.amount),
-                    'CHANNEL_ID': PAYTM_CHANNEL_ID,
-                    'WEBSITE': PAYTM_WEBSITE,
-                    'INDUSTRY_TYPE_ID': PAYTM_INDUSTRY_TYPE_ID,
-                    'CALLBACK_URL': PAYTM_CALLBACK_URL,
-                    'MOBILE_NO': order.phone,
-                    'EMAIL': order.email,
-                    'PAYMENT_MODE_ONLY': 'NO',
-                    'AUTH_MODE': 'USRPWD',
-                    'PAYMENT_TYPE_ID': 'PPI',
-                }
-                
-                # Generate checksum
-                paytm_params = {k: v for k, v in param_dict.items() if k != 'CHECKSUMHASH'}
-                checksum = PaytmChecksum.generateSignature(paytm_params, PAYTM_MERCHANT_KEY)
-                param_dict['CHECKSUMHASH'] = checksum
-                
-                # Store order ID in session for verification in callback
-                request.session['order_id'] = order.order_id
-                
-                # Redirect to PayTM payment page
-                return render(request, 'paytm.html', {
-                    'param_dict': param_dict,
-                    'payment_url': PAYTM_PAYMENT_GATEWAY_URL
-                })
-                order.save()
-                
-                # Prepare PayTM parameters
-                param_dict = {
-                    'MID': PAYTM_MERCHANT_ID,
-                    'ORDER_ID': order_id,
-                    'TXN_AMOUNT': str(order.amount),
-                    'CUST_ID': order.email,
-                    'INDUSTRY_TYPE_ID': PAYTM_INDUSTRY_TYPE_ID,
-                    'WEBSITE': PAYTM_WEBSITE,
-                    'CHANNEL_ID': PAYTM_CHANNEL_ID,
-                    'CALLBACK_URL': PAYTM_CALLBACK_URL,
-                }
-                
-                # Generate checksum using PaytmChecksum
-                paytm_params = {k: v for k, v in param_dict.items() if k != 'CHECKSUMHASH'}
-                checksum = PaytmChecksum.generateSignature(paytm_params, PAYTM_MERCHANT_KEY)
-                param_dict['CHECKSUMHASH'] = checksum
-                
-                # Store order ID in session for verification in callback
-                request.session['order_id'] = order_id
-                
-                # Redirect to PayTM payment page
-                return render(request, 'paytm.html', {
-                    'param_dict': param_dict,
-                    'payment_url': PAYTM_PAYMENT_GATEWAY_URL
-                })
-            
-            else:
-                raise ValueError("Invalid payment method")
-                
-    except Exception as e:
-        print(f"Error in process_payment: {str(e)}")
-        messages.error(request, f"An error occurred: {str(e)}. Please try again.")
-        return redirect('checkout')
-
-
-@csrf_exempt
-def handlerequest(request):
-    """Handle PayTM payment callback"""
-    if request.method != 'POST':
-        return redirect('index')
-    
-    try:
-        # Get form data
-        response_dict = {}
-        for key in request.POST:
-            response_dict[key] = request.POST[key]
-        
-        # Get order ID from response
-        order_id = response_dict.get('ORDERID')
-        if not order_id:
-            return HttpResponseBadRequest("Invalid order ID")
-        
-        # Get order from database
-        try:
-            order = Orders.objects.get(order_id=order_id)
-        except Orders.DoesNotExist:
-            return HttpResponseBadRequest("Order not found")
-        
-        # Verify checksum
-        checksum = response_dict.get('CHECKSUMHASH', '')
-        verify = False
-        
-        if checksum:
-            paytm_params = {k: v for k, v in response_dict.items() if k != 'CHECKSUMHASH'}
-            try:
-                verify = PaytmChecksum.verifySignature(paytm_params, PAYTM_MERCHANT_KEY, checksum)
-            except Exception as e:
-                print(f"Error verifying checksum: {str(e)}")
-                verify = False
-        
-        if not verify:
-            # Log the failed checksum verification
-            OrderUpdate.objects.create(
-                order_id=order_id,
-                update_desc=f"Payment failed: Invalid checksum. Response: {response_dict}",
-                delivered=False
-            )
-            return HttpResponseBadRequest("Invalid checksum")
-
-        # Verify transaction status
-        if response_dict.get('RESPCODE') == '01':
-            # Transaction successful
-            order.paymentstatus = 'Paid'
-            order.save()
-            
-            # Update order status
-            OrderUpdate.objects.create(
-                order_id=order.order_id,
-                update_desc=f"Payment successful. Transaction ID: {response_dict.get('TXNID')}",
-                delivered=False
-            )
-            
-            # Clear cart
+            # Clear cart after successful order placement
             if 'cart' in request.session:
                 del request.session['cart']
             
             # Store order ID in session for the success page
             request.session['order_id'] = str(order.order_id)
             
-            # Redirect to success page with order details
             return render(request, 'payment_success.html', {
                 'order': order,
-                'payment_method': 'Online Payment',
-                'status': 'confirmed',
-                'transaction_id': response_dict.get('TXNID')
-            })
-        else:
-            # Transaction failed
-            error_msg = response_dict.get('RESPMSG', 'Payment failed')
-            
-            # Update order status
-            OrderUpdate.objects.create(
-                order_id=order.order_id,
-                update_desc=f"Payment failed: {error_msg}",
-                delivered=False
-            )
-            
-            # Store order ID in session for the failed page
-            request.session['order_id'] = str(order.order_id)
-            
-            return render(request, 'payment_failed.html', {
-                'order': order,
-                'error': error_msg,
-                'response': response_dict,
-                'payment_method': 'Online Payment'
+                'payment_method': 'Cash on Delivery',
+                'status': 'confirmed'
             })
             
     except Exception as e:
+        print(f"Error in process_payment: {str(e)}")
         import traceback
-        print(f"Error in handlerequest: {str(e)}\n{traceback.format_exc()}")
-        return HttpResponseBadRequest("An error occurred while processing your payment.")
+        traceback.print_exc()
+        messages.error(request, "An error occurred while processing your order. Please try again.")
+        return redirect('checkout')
+        # This code block has been removed as PayTM integration is no longer needed
 
 def payment_success(request):
     """Handle successful payment and display order confirmation"""

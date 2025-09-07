@@ -9,7 +9,6 @@ services:
       version: "3.10.12"
     buildCommand: |
       python -m pip install --upgrade pip wheel setuptools
-      pip install dj-database-url==1.3.0 psycopg2-binary==2.9.9
       pip install -r requirements.txt --no-cache-dir --force-reinstall
       python manage.py collectstatic --noinput
       python manage.py migrate --noinput
@@ -44,19 +43,6 @@ services:
         value: "your-app-password"     # Use App Password if using Gmail
       - key: DEFAULT_FROM_EMAIL
         value: "your-email@gmail.com"  # Update with your email
-      # PayTM settings
-      - key: PAYTM_MERCHANT_ID
-        value: "7678143019@pthdfc"
-      - key: PAYTM_MERCHANT_KEY
-        value: "your-merchant-key"     # Update with your PayTM merchant key
-      - key: PAYTM_WEBSITE
-        value: "DEFAULT"
-      - key: PAYTM_CHANNEL_ID
-        value: "WEB"
-      - key: PAYTM_INDUSTRY_TYPE_ID
-        value: "Retail"
-      - key: PAYTM_CALLBACK_URL
-        value: "https://your-render-url.onrender.com/handlerequest/"  # Update with your Render URL
     plan: free
     numInstances: 1
     healthCheckPath: /
