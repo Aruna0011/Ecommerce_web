@@ -1,0 +1,12 @@
+include LICENSE
+include README.md
+include requirements.txt
+include runtime.txt
+recursive-include ecommerce/static *
+recursive-include ecommerce/templates *
+recursive-include media *
+recursive-include static *
+recursive-include templates *
+recursive-include PayTm *
+recursive-include cart *
+recursive-include truckbrand *

@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=6.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ecommerce"
+version = "0.1.0"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "Django==4.2.7",
+    "gunicorn==21.2.0",
+    "whitenoise==6.5.0",
+    "psycopg2-binary==2.9.9",
+    "Pillow==10.1.0",
+    "python-magic==0.4.27",
+    "python-magic-bin==0.4.14; sys_platform == 'win32'"
+]
