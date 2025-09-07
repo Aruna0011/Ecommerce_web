@@ -1,0 +1,37 @@
+# Render Configuration File
+# Documentation: https://render.com/docs/deploy-django
+
+services:
+  - type: web
+    name: truckbrand
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn ecommerce.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.9.0"
+      - key: DJANGO_SETTINGS_MODULE
+        value: "ecommerce.settings.production"
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: DISABLE_COLLECTSTATIC
+        value: "0"
+    plan: free
+    numInstances: 1
+    healthCheckPath: /
+    autoDeploy: yes
+
+  # Uncomment and configure this section if you're using a PostgreSQL database
+  # - type: postgres
+  #   name: truckbrand-db
+  #   plan: free
+  #   disk:
+  #     name: truckbrand-db-disk
+  #     sizeGB: 1
+  #     mountPath: /var/lib/postgresql/data
+  #   databases:
+  #     - name: truckbrand
+  #       user: truckbrand_user
+  #   ipAllowList: []
+  #   autoUpgrade: true
+  #   maintenanceWindow: saturday-23:00-UTC
